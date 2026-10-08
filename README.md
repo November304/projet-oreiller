@@ -13,6 +13,8 @@ Oreiller connecté : Analyse de données pour la détection de la qualité du so
 
 ## Etude sur les paramètres : 
 
+En utilisant `DataBrut.describe()` sur le fichier `SaYoPillow.csv`, on obtient les informations suivantes sur les colonnes de données :
+
 | Index | Colonne | Signification | Plage observée | Unité probable |
 |---|---|---|---|---|
 | 0 | `sr` | **S**noring **r**ate : niveau de ronflement | 45 – 100 | dB |
@@ -25,8 +27,7 @@ Oreiller connecté : Analyse de données pour la détection de la qualité du so
 | 7 | `hr` | **H**eart **r**ate : fréquence cardiaque | 50 – 85 | bpm |
 | 8 | `sl` | **S**tress **l**evel : niveau de stress (cible) | 0 – 4 | classe |
 
-Niveaux de stress : 0 - faible/normal, 1 - moyen-faible, 2 - moyen, 3 - moyen-élevé, 4 - élevé.
-
+En utilisant `print(DataBrut["sl"].value_counts())`, on obtient la distribution des classes de stress dans le dataset. On peut voir que toutes les classes sont représentées également.
 
 
 ## Resultats : 
