@@ -10,6 +10,14 @@ Oreiller connecté : Analyse de données pour la détection de la qualité du so
 
 ## Methodes utilisées : 
 
+### Méthodes supervisées : 
+"QuadraticDiscriminantAnalysis" #Classification bayésenne 
+"GaussianNB" #Classification bayésienne naive
+"KNeighborsClassifier" #Classification par k plus proches voisins
+
+### Méthodes non supervisées :
+"KMeans"
+"SpectralClustering"
 
 ## Etude sur les paramètres : 
 
@@ -28,10 +36,4 @@ En utilisant `DataBrut.describe()` sur le fichier `SaYoPillow.csv`, on obtient l
 | 8 | `sl` | **S**tress **l**evel : niveau de stress (cible) | 0 – 4 | classe |
 
 En utilisant `print(DataBrut["sl"].value_counts())`, on obtient la distribution des classes de stress dans le dataset. On peut voir que toutes les classes sont représentées également.
-
-
-## Resultats : 
-
-
-## Conclusion : 
 
