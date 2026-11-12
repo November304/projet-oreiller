@@ -1,0 +1,76 @@
+PROJET OREILLER CONNECTE - CE QUI MANQUE
+========================================
+
+PRIORITE 1 - BUG A CORRIGER
+---------------------------
+[X] Partie I, methodes non supervisees : ajouter n_clusters=5
+      KMeans(n_clusters=5, random_state=0)
+      SpectralClustering(n_clusters=5, random_state=0)
+    Sans parametre, sklearn utilise 8 clusters par defaut -> le 100 % est trompeur.
+    Resultats attendus apres correction (donnees brutes) :
+      - KMeans k=5   : 94,4 %   (au lieu de 100 %)
+      - Spectral k=5 : 100 %
+    Puis relancer tout le notebook.
+
+    Pourquoi 5 et pas 8 :
+      - 8 n'a ete choisi par personne, c'est juste la valeur par defaut de sklearn.
+      - On cherche 5 niveaux de stress (0 a 4) -> il faut 5 groupes.
+      - La fonction correspondance donne a chaque cluster sa classe majoritaire,
+        en utilisant les VRAIS labels. Avec 8 clusters, plusieurs clusters
+        recoivent la meme classe : la correspondance "recolle" les morceaux
+        a l'aide des labels, ce qui revient a tricher un peu.
+      - Constat avec k=8 : les classes 0, 2 et 3 sont chacune coupees en deux
+        clusters de 63 nuits. Le modele n'a donc PAS retrouve les 5 niveaux.
+      - Plus on met de clusters, plus l'accuracy monte artificiellement
+        (KMeans brut : k=2 -> 40 %, k=5 -> 94 %, k=8 -> 100 %, k=50 -> 100 %).
+        A l'extreme, 1 cluster par nuit donne toujours 100 %.
+      - En partie II on utilise deja 5 : il faut la meme valeur pour comparer.
+
+PRIORITE 2 - COMMENTAIRES A REDIGER (le sujet dit "commentez" partout)
+---------------------------------------------------------------------
+[ ] Partie I supervise : commenter les matrices de confusion (100 % pour les 3)
+[ ] Partie I non supervise : commenter (apres correction k=5)
+[ ] Partie II : expliquer le choix de la dimension de l'ACP
+[ ] Partie II supervise : commenter (GaussianNB 98,9 % : 2 nuits de classe 0 predites en 1)
+[ ] Partie II non supervise : commenter (KMeans 93,3 %, erreurs uniquement entre
+    niveaux voisins 0->1, 2->1, 3->4 : logique car les classes sont ordonnees)
+[ ] Remplir la cellule "Commentaires a retenir pour le rapport"
+[ ] README : remplir Methodes / Resultats / Conclusion
+[ ] Demander au prof si un rapport separe est attendu (format, date)
+
+PRIORITE 3 - EXPLIQUER POURQUOI ON A 100 %
+------------------------------------------
+[ ] Variables tres correlees entre elles (|r| >= 0,86 pour toutes les paires)
+    et chacune tres correlee au stress (|r| = 0,95 a 0,98)
+    -> classes quasi separables, donnees probablement generees.
+[ ] Ajouter une matrice de correlation (comme au TP1) pour l'illustrer.
+[ ] Option : validation croisee 10 plis (cross_val_score) -> 100 % sur chaque pli
+    pour les 3 modeles, donc pas un hasard du decoupage train/test.
+[ ] Preciser : aucune ligne en double dans le jeu (pas de fuite par doublons).
+
+PRIORITE 4 - JUSTIFIER LES PARAMETRES (demande par le sujet)
+------------------------------------------------------------
+[ ] QDA reg_param=0.01 : sans lui, la QDA plante
+    ("The covariance matrix of class 0 is not full rank") a cause de la
+    colinearite des variables -> regularisation indispensable.
+[ ] KNN : k=5 voisins (valeur par defaut), le dire explicitement.
+[ ] SpectralClustering : affinite RBF, gamma=1 (defauts), le dire.
+[ ] KMeans : random_state=0 pour la reproductibilite.
+
+PRIORITE 5 - ACP : MIEUX ARGUMENTER LA DIMENSION
+------------------------------------------------
+[ ] PC1 seule = 96,9 % d'inertie -> critere du coude : 1 dimension suffit.
+    2 dimensions surtout pour pouvoir visualiser.
+[ ] Option : comparer 1, 2 et 3 dimensions
+    (KMeans sur PC1 seule = 95,2 %, mieux que sur 2D = 93,3 %).
+[ ] Discuter l'absence de standardisation : unites differentes (dB, degF, %, h),
+    PC1 depend surtout du ronflement (poids 0,75, ecart-type 19) et des REM.
+    Avec StandardScaler, PC1 = 93,7 %. Soit discuter, soit faire une ACP normee.
+
+DETAILS MINEURS
+---------------
+[ ] Ajouter random_state=0 a SpectralClustering (partie I et II).
+[ ] ACP ajustee sur toutes les donnees avant le split train/test :
+    legere fuite, a mentionner (ou ajuster l'ACP sur X_train seulement).
+[ ] Corriger la faute "bayesenne" -> "bayesienne" dans les commentaires du code.
+[ ] README : preciser que pandas lit la 2e colonne "sr" sous le nom "sr.1".
